@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  body{
+    text-align: center;
+    font-family: monospace;
+  }
+
+  #main{
+    width:700px;
+    height:500px;
+    margin: 0 auto ;
+    border-style:solid;
+    border-radius: 2px;
+    border-color:black;
+  }
+  .listHolder{
+   float:left;
+    margin-top: -3px;
+    width:175px;
+    height:500px;
+    border-style:solid;
+    border-radius: 1px;
+    border-color:black;
+  }
+  .picholder{
+    width:100%;
+  }
+  #allPics{
+ float:right;
+ margin-top: -3px;
+    width:513px;
+    height:500px;
+    border-style:solid;
+    border-radius: 2px;
+    border-color:black;
+
+  }
+
+button{
+  height:50px;width:100%;
+  background-color: lightgreen;
+}
+.CatImage{
+width:100%;
+height:auto;
+}
+  </style>
+
+</head>
+<body>
+	<h1>Welcome to cat clicker</h1>
+	<p>Select a cat and Click on the cat picture to increase the click count</p>
+	<div id="main">
+		<div class="listHolder" id="Names">
+			<h1>Cat Name:</h1>
+		</div>
+		<div id="allPics">
+          <!-- images -->
+		</div>
+	</div>
+
+<script>
+var cats=[];
+var model = {
+	init: function(){
+		model.addCats(model.catNames);
+	},
+	catNames : ["Dolly","Orange","Happy","Sunny","Victor"],
+	addCats: function(catNames){
+   		for(var a in catNames){
+   			var name=catNames[a];
+   			var cat=new model.newCat(catNames[a]);
+   		}
+	},
+	newCat : function(name){
+		this.name=name;
+    	this.counts=0;
+    	cats.push(this);
+    },
+    
+};
+
+var controller={
+	init :function(){
+  	model.init();
+    for(var x=0;x<cats.length;x++){
+        view.renderButtons(x);
+    }
+    for(var a=0;a<cats.length;a++){
+  		document.getElementById('but'+a).addEventListener("click",(function(nameCopy){
+    	return function(){
+        	view.renderCat(nameCopy);
+        	document.getElementById('catImage'+nameCopy).addEventListener('click', (function(numCopy) {
+        		return function() {
+            		numCopy.counts++;
+           			view.renderCount(numCopy);
+        		};
+       		})(cats[nameCopy]));
+    	}
+  		})(a));
+
+	}  	}	}
+
+var view={
+	renderButtons:function(x){
+		document.getElementById('Names').innerHTML+="<button id='but"+x+"' type='button'>"+cats[x].name+"</button></br>";
+	},
+    renderCat:function(x){
+       var catPic = document.createElement('div');
+       catPic.innerHTML="<div class='picholder' id='pichold"+x+"'>"+
+                   "<h3>Name : "+cats[x].name+"</h3><img class='CatImage' id='catImage"+x+"' src='unnamed ("+x+").jpg'/>"+
+                   "<h2>Count: <span id='catCount"+cats[x].name+"'>"+cats[x].counts+"</span></h2></div>"
+
+        document.getElementById("allPics").innerHTML=catPic.innerHTML;
+
+   },
+   renderCount:function(cat){
+   	document.getElementById('catCount'+cat.name).innerHTML=cat.counts;
+   }
+};
+
+
+controller.init();
+
+
+
+</script>
+</body>
+</html>
