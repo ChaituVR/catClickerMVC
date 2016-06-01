@@ -1,2 +1,4 @@
 # catClickerMVC
-For Udacity's Js Patterns Course 
+For Udacity's Js design Patterns Course 
+
+Tried MVC for this 
