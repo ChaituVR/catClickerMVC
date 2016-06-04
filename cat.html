@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  body{
+    text-align: center;
+    font-family: monospace;
+  }
+
+  #main{
+    width:700px;
+    height:500px;
+    margin: 0 auto ;
+    border-style:solid;
+    border-radius: 2px;
+    border-color:black;
+  }
+  .listHolder{
+   float:left;
+    margin-top: -3px;
+    width:175px;
+    height:500px;
+    border-style:solid;
+    border-radius: 1px;
+    border-color:black;
+  }
+  .picholder{
+    width:100%;
+  }
+  #allPics{
+ float:right;
+ margin-top: -3px;
+    width:513px;
+    height:500px;
+    border-style:solid;
+    border-radius: 2px;
+    border-color:black;
+
+  }
+
+button{
+  height:50px;width:100%;
+  background-color: lightgreen;
+}
+.CatImage{
+width:100%;
+height:auto;
+}
+  </style>
+
+</head>
+<body>
+<h1>Welcome to cat clicker</h1>
+<p>Select a cat and Click on the cat picture to increase the click count</p>
+<div id="main">
+<div class="listHolder" id="Names">
+<h1>Cat Name:</h1>
+</div>
+<div id="allPics">
+
+</div>
+</div>
+
+<script>
+function hideAll(){
+  var elements = document.getElementsByClassName("picholder");
+ for(var i = 0; i < 5; i ++) {
+        elements[i].style.display="none";
+    }
+}
+
+function cat(name){
+ this.name=name;
+ this.counts=0;
+}
+var cat1=new cat("Dolly");
+var cat2=new cat("Orange");
+var cat3=new cat("Happy");
+var cat4=new cat("Sunny");
+var cat5=new cat("Victor");
+var cats=[cat1,cat2,cat3,cat4,cat5];
+for(var x=0;x<cats.length;x++){
+  document.getElementById('Names').innerHTML+="<button id='but"+x+"' type='button'>"+cats[x].name+"</button></br>";
+  var g = document.createElement('div');
+  g.innerHTML="<div class='picholder' id='pichold"+x+"'>"+
+   "<h3>Name : "+cats[x].name+"</h3><img class='CatImage' id='catImage"+x+"' src='unnamed ("+x+").jpg'/>"+
+   "<h2>Count: <span id='catCount"+cats[x].name+"'>0</span></h2></div>"
+
+document.getElementById("allPics").innerHTML+=g.innerHTML;
+
+}
+hideAll();
+
+for(var a=0;a<cats.length;a++){
+
+document.getElementById('but'+a).addEventListener("click",(function(nameCopy){
+    return function(){
+       hideAll();
+       document.getElementsByClassName("picholder")[nameCopy].style.display="block";
+    }
+  })(a));
+
+document.getElementById('catImage'+a).addEventListener('click', (function(numCopy) {
+
+        return function() {
+          numCopy.counts++;
+          document.getElementById('catCount'+numCopy.name).innerHTML=numCopy.counts;
+
+        };
+    })(cats[a]));
+
+}
+
+
+
+</script>
+</body>
+</html>

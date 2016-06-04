@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  body{
+    text-align: center;
+    font-family: monospace;
+  }
+
+  #main{
+    width:700px;
+    height:500px;
+    margin: 0 auto ;
+    border-style:solid;
+    border-radius: 2px;
+    border-color:black;
+  }
+  .listHolder{
+    direction: rtl; text-align: left;
+   float:left;
+    margin-top: -3px;
+    width:175px;
+    height:500px;
+    border-style:solid;
+    border-radius: 1px;
+    border-color:black;
+    overflow-y: scroll;
+  }
+  .picholder{
+    width:100%;
+  }
+  #allPics{
+ float:right;
+ margin-top: -3px;
+    width:513px;
+    height:500px;
+    border-style:solid;
+    border-radius: 2px;
+    border-color:black;
+
+  }
+
+button{
+  height:50px;width:100%;
+  background-color: lightgreen;
+}
+button:hover{
+  height:52px;
+  background-color: limegreen;
+}
+.CatImage{
+width:100%;
+height:auto;
+}
+input{
+  margin:8px;
+  padding:10px;
+}
+#adminPanel{
+  display: none;
+  margin:10px;
+  border-style: solid;
+  width:400px;
+  margin:0 auto;
+}
+
+  </style>
+
+
+</head>
+<body>
+  <h1>Welcome to cat clicker</h1>
+  <p>Select a cat and Click on the cat picture to increase the click count</p>
+  <div id="main">
+    <div class="listHolder" id="Names">
+      <h1>Cat Name:</h1>
+    </div>
+    <div id="allPics">
+          <!-- images -->
+          <div class='picholder'>
+          <h3>Name : <span id ="CatName"></span></h3><img alt="Image Not Available" class='CatImage' id='catImageHolder' src=''/>
+                   <h2>Count: <span id='catCounts'></span></h2></div>
+    </div>
+  </div></br>
+<button id= "admin" style="background-color: lightblue;width:200px;" onclick="view.ShowAdmin()">Admin</button>
+<div id = "adminPanel">
+ 
+  Name: <input id ="addName" type="text"></br>
+  URL: <input  id ="addUrl" type="text"></br>
+  Counts: <input id ="addcounts" type="number" value="0"></br>
+  <button onclick="controller.submitForm(this)" style="background-color: lightblue;width:80px;">Submit</button> 
+   <button type="reset" style="background-color: lightblue;width:80px;">Clear</button>  
+
+</div>
+<script>
+
+
+var model = {
+   currentCat:null,
+   cats:[{
+    name:"Dolly",
+    url:"unnamed (0).jpg",
+    counts:0
+   },
+   {
+    name:"Orange",
+    url:"unnamed (1).jpg",
+    counts:0
+   },
+   {
+    name:"Happy",
+    url:"unnamed (2).jpg",
+    counts:0
+   },
+   {
+    name:"Sunny",
+    url:"unnamed (3).jpg",
+    counts:0
+   },
+   {
+    name:"Victor",
+    url:"unnamed (4).jpg",
+    counts:0
+   }]
+  
+};
+
+
+
+var controller={
+  init :function(){
+         controller.setCurrentCat(0);
+         view.renderButtons();
+         view.renderCat(model.currentCat);
+          document.getElementById('catImageHolder').addEventListener('click', (function(numCopy) {
+            controller.countIncrementor();
+          
+          }));
+         this.addEventListeners();
+           },
+   addEventListeners:function(){
+            
+    for(var a=0;a<model.cats.length;a++){
+      document.getElementById('but'+a).addEventListener("click",(function(nameCopy){
+      return function(){
+           controller.setCurrentCat(nameCopy);
+          view.renderCat(model.currentCat);
+          
+      }
+      })(a));
+
+  } 
+   },
+   getCats:function(){
+    return model.cats;
+   }
+  , setCurrentCat:function(currentCat){
+    model.currentCat=currentCat;
+  },
+   countIncrementor:function(){
+    var currentCat=model.cats[model.currentCat];
+    currentCat.counts++;
+    view.renderCount(currentCat);
+   },
+   submitForm:function(){
+   var addName = document.getElementById("addName").value;
+   var addUrl = document.getElementById("addUrl").value;
+   var addcounts = document.getElementById("addcounts").value;
+    
+    if(addName !="" && addUrl !="" && addcounts){
+      model.cats.push(new controller.newCat(addName , addUrl , addcounts));
+      console.log(model.cats);
+      view.renderButtons();
+      controller.addEventListeners();
+      view.EmptyForm();
+    }
+    else{
+      alert("Please provide correct input")
+    }
+   },
+   newCat:function(addName , addUrl , addcounts){
+    this.name=addName;
+    this.url=addUrl;
+    this.counts=addcounts;
+   }
+   }
+
+
+
+var view={
+  renderButtons:function(){
+    document.getElementById('Names').innerHTML='';
+    var cats=controller.getCats();
+    for(var x=0;x<cats.length;x++){
+    document.getElementById('Names').innerHTML+="<button id='but"+x+"' type='button'>"+cats[x].name+"</button></br>";
+    }
+  },
+    renderCat:function(x){
+       var cats=controller.getCats();
+       document.getElementById('CatName').innerHTML=cats[x].name;
+       document.getElementById('catImageHolder').src=cats[x].url;
+       this.renderCount(cats[x]);
+
+   },
+   renderCount:function(cat){
+    document.getElementById('catCounts').innerHTML=cat.counts;
+  
+   },
+   ShowAdmin:function(){
+     var div = document.getElementById("adminPanel");
+if (div.style.display !== "block") {
+    div.style.display = "block";
+}
+else {
+    div.style.display = "none";
+}
+   },
+   EmptyForm:function(){
+    document.getElementById("addName").value="";
+   document.getElementById("addUrl").value="";
+  document.getElementById("addcounts").value=0;
+   }
+};
+
+
+controller.init();
+
+
+
+</script>
+</body>
+</html>
