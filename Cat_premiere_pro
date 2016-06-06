@@ -153,6 +153,8 @@ var controller={
    },
    getCats:function(){
     return model.cats;
+   },getCurrentCat:function(){
+    return model.currentCat;
    }
   , setCurrentCat:function(currentCat){
     model.currentCat=currentCat;
@@ -168,11 +170,16 @@ var controller={
    var addcounts = document.getElementById("addcounts").value;
     
     if(addName !="" && addUrl !="" && addcounts){
-      model.cats.push(new controller.newCat(addName , addUrl , addcounts));
-      console.log(model.cats);
+      //model.cats.push(new controller.newCat(addName , addUrl , addcounts));
+      //console.log(model.cats);
+      //view.renderButtons();
+      //controller.addEventListeners();
+      model.cats[model.currentCat] = new controller.newCat(addName , addUrl , addcounts);
       view.renderButtons();
       controller.addEventListeners();
+      view.renderCat(model.currentCat);
       view.EmptyForm();
+      view.ShowAdmin();
     }
     else{
       alert("Please provide correct input")
@@ -182,6 +189,7 @@ var controller={
     this.name=addName;
     this.url=addUrl;
     this.counts=addcounts;
+
    }
    }
 
@@ -207,6 +215,11 @@ var view={
   
    },
    ShowAdmin:function(){
+      var cats=controller.getCats();
+      var currentCat=controller.getCurrentCat();
+      document.getElementById("addName").value=cats[currentCat].name;
+      document.getElementById("addUrl").value=cats[currentCat].url;
+      document.getElementById("addcounts").value=cats[currentCat].counts;
      var div = document.getElementById("adminPanel");
 if (div.style.display !== "block") {
     div.style.display = "block";
